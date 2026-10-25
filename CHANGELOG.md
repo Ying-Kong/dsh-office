@@ -3,6 +3,17 @@
 All notable changes to this project. Format: [Keep a Changelog](https://keepachangelog.com/),
 versioning: [SemVer](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- Fixture template: class is `示例班级01` instead of a real class code, and the
+  report title now reads `大数据分析与内存计算（Spark）`.
+- **Title wrapping:** the longer title no longer fits on one line, and Word's
+  automatic break fell between `课` and `程`. The fixture now uses an explicit
+  `<w:br/>` after `》` plus tightened padding spaces, so the two centered lines
+  break at a natural boundary. `fixtures/reporter/ops.json` was re-pinned to the
+  new `template.content_sha256`.
+
 ## [0.1.2] - 2026-10-25
 
 Installability. `0.1.0`/`0.1.1` shipped a `dsh.bundle.entry` field that the

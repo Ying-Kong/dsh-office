@@ -4,7 +4,7 @@ Everything here is test-only, anonymised, and safe to publish.
 
 | path | what | notes |
 |---|---|---|
-| `templates/report.docx` | 2-page course report form: 7-row table, merged cells, `【…】` label cells | anonymised: the student name is `张三`, the id is `2023000000001`. The original `.doc` is **not** shipped |
+| `templates/report.docx` | 2-page course report form: 7-row table, merged cells, `【…】` label cells | anonymised: class `示例班级01`, student `张三`, id `2023000000001`. Title reads `大数据分析与内存计算（Spark）` with a manual break before `课程实验实训报告` — that is the fix for the mid-word wrap a longer title causes. The original `.doc` is **not** shipped |
 | `reporter/ops.json` | reference op list: title, teacher, date, content cell with figures, summary | `template.content_sha256` is pinned to the template above |
 | `images/fig1.png` | Windows Explorer screenshot (Scala install dir) | no watermark, unmodified full frame |
 | `images/fig2.png` | console screenshot, 2524×1136 — used to exercise width capping | no watermark |
