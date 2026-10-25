@@ -120,7 +120,7 @@ Not on npm yet, so there are two install paths.
 **A. Tarball (peer resolves cleanly)** — recommended
 
 ```bash
-cd node && npm pack                     # -> dsh-office-plugin-0.1.0.tgz
+cd node && npm pack                     # -> dsh-office-plugin-0.1.1.tgz
 dsh plugin --profile web add ./dsh-office-plugin-0.1.0.tgz
 ```
 

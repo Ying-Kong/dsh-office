@@ -3,6 +3,30 @@
 All notable changes to this project. Format: [Keep a Changelog](https://keepachangelog.com/),
 versioning: [SemVer](https://semver.org/).
 
+## [0.1.1] - 2026-10-25
+
+Load-time compatibility fix for the DSH adapter. The Python core is unchanged.
+
+### Fixed
+- **`defineTool` output** — the host's `defineTool` reads `options.output.render`
+  and threw on load; every tool now declares a canonical output schema plus a
+  text renderer. Regression test asserts the shape, because a faked `defineTool`
+  cannot catch it.
+- **Peer resolution for linked installs** — `import('@deepseek-ai/dsh-tools')`
+  from the plugin fails when the profile installs it with `link:`, because the
+  real files live outside the profile tree. `apply()` now falls back to
+  resolving the peer from the profile working directory.
+
+### Changed
+- `engines.dsh` and the `@deepseek-ai/dsh-tools` peer range are now
+  `>=0.2.0-0`. The previous `*` does not match a prerelease, and the host runs
+  `0.2.1-rc.2`.
+- Verified against DSH `0.2.1-rc.2` / Node `24.16.0`: the config tree mounts the
+  row without warnings and the host's own `defineTool` accepts all three tools.
+
+### Note
+`v0.1.0` was tagged before this fix and its adapter does not load. Use `v0.1.1`.
+
 ## [0.1.0] - 2026-10-25
 
 First usable cut: extract → fill → verify, Word only.

@@ -8,8 +8,8 @@ dependencies by design.
 Not published to npm yet:
 
 ```bash
-npm pack                                   # dsh-office-plugin-0.1.0.tgz
-dsh plugin --profile web add ./dsh-office-plugin-0.1.0.tgz
+npm pack                                   # dsh-office-plugin-0.1.1.tgz
+dsh plugin --profile web add ./dsh-office-plugin-0.1.1.tgz
 # or, while developing:
 dsh plugin --profile web add /absolute/path/to/dsh-office/node
 ```
