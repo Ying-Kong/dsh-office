@@ -1,6 +1,6 @@
 {
   "name": "@dsh-office/plugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "DSH plugin: deterministic OOXML template filling via declarative ops (Word first, Excel planned)",
   "type": "module",
   "main": "src/plugin.mjs",
@@ -11,6 +11,7 @@
   },
   "files": [
     "src",
+    "cordis.patch.yml",
     "README.md",
     "LICENSE"
   ],
@@ -42,7 +43,7 @@
   },
   "dsh": {
     "bundle": {
-      "entry": "src/plugin.mjs"
+      "patch": "./cordis.patch.yml"
     }
   }
 }

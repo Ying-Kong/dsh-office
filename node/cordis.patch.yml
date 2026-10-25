@@ -1,0 +1,16 @@
+# dsh-office bundle patch: a single row that mounts the plugin.
+#
+# Installed as a bundle (`dsh plugin add <tarball>`), this file is applied
+# automatically and the profile lists the package under `dsh.profile.bundles`,
+# so the plugin is enabled without hand-editing cordis.patch.yml.
+#
+# Override the row from the profile patch to pin the interpreter:
+#
+#   - id: dsh-office
+#     name: '@dsh-office/plugin'
+#     config:
+#       pythonPath: /abs/path/to/dsh-office/.venv/bin/python
+- insert:
+    - id: dsh-office
+      name: '@dsh-office/plugin'
+      config: {}

@@ -8,13 +8,13 @@ dependencies by design.
 Not published to npm yet:
 
 ```bash
-npm pack                                   # dsh-office-plugin-0.1.1.tgz
-dsh plugin --profile web add ./dsh-office-plugin-0.1.1.tgz
+npm pack                                   # dsh-office-plugin-0.1.2.tgz
+dsh plugin --profile web add ./dsh-office-plugin-0.1.2.tgz
 # or, while developing:
 dsh plugin --profile web add /absolute/path/to/dsh-office/node
 ```
 
-Then enable `dsh-office` on the Plugins page and make sure the Python core is
+The bundle patch mounts the row on install, so nothing to enable manually. Make sure the Python core is
 importable: `export DSH_OFFICE_PYTHON=/path/to/dsh-office/.venv/bin/python`.
 
 Configuration (all optional):

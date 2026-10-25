@@ -120,7 +120,7 @@ Not on npm yet, so there are two install paths.
 **A. Tarball (peer resolves cleanly)** — recommended
 
 ```bash
-cd node && npm pack                     # -> dsh-office-plugin-0.1.1.tgz
+cd node && npm pack                     # -> dsh-office-plugin-0.1.2.tgz
 dsh plugin --profile web add ./dsh-office-plugin-0.1.0.tgz
 ```
 
@@ -130,9 +130,13 @@ dsh plugin --profile web add ./dsh-office-plugin-0.1.0.tgz
 dsh plugin --profile web add /absolute/path/to/dsh-office/node
 ```
 
-Then open **Plugins** and enable `dsh-office`. With a linked install the real
-files stay outside the profile, so the adapter resolves
-`@deepseek-ai/dsh-tools` from the profile working directory as a fallback.
+The package ships `node/cordis.patch.yml` and declares `dsh.bundle.patch`, so
+installing it adds the row **and enables it** — no hand-editing. (0.1.0/0.1.1 did
+not, which is why they appear installed but never load.)
+
+With a linked install the real files stay outside the profile, so the adapter
+resolves `@deepseek-ai/dsh-tools` from the profile working directory as a
+fallback.
 
 **Point it at a Python that can import the core**
 

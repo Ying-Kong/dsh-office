@@ -3,6 +3,28 @@
 All notable changes to this project. Format: [Keep a Changelog](https://keepachangelog.com/),
 versioning: [SemVer](https://semver.org/).
 
+## [0.1.2] - 2026-10-25
+
+Installability. `0.1.0`/`0.1.1` shipped a `dsh.bundle.entry` field that the
+loader never reads (`app-boot` only honours `dsh.bundle.patch`), so
+`dsh plugin add` installed the package as a **plain dependency**: no patch row,
+no mount, the plugin never loaded.
+
+### Fixed
+- `node/cordis.patch.yml` ships one row (`id: dsh-office`), and
+  `package.json` declares `dsh.bundle.patch` pointing at it. Installing the
+  tarball now appends the package to `dsh.profile.bundles` and enables it, so
+  the tools appear without editing any YAML.
+- `files` includes `cordis.patch.yml` so `npm pack` actually ships it.
+
+### Upgrading
+Remove the old plain dependency first if you installed 0.1.0/0.1.1:
+
+```bash
+dsh plugin --profile web remove @dsh-office/plugin
+dsh plugin --profile web add ./dsh-office-plugin-0.1.2.tgz
+```
+
 ## [0.1.1] - 2026-10-25
 
 Load-time compatibility fix for the DSH adapter. The Python core is unchanged.
