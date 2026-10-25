@@ -30,6 +30,31 @@ test('registers exactly the three document tools', () => {
   assert.deepEqual(names, ['office_extract', 'office_fill', 'office_verify']);
 });
 
+test('every tool declares a canonical output with a renderer', () => {
+  // Regression: the real defineTool reads options.output.render and throws
+  // without it. A fake defineTool cannot catch that, so assert the shape here.
+  for (const { definition } of defs()) {
+    assert.ok(definition.output, `${definition.name} needs output`);
+    assert.ok(definition.output.schema, `${definition.name} needs output.schema`);
+    assert.equal(typeof definition.output.render, 'function');
+    const blocks = definition.output.render({}, { ok: true });
+    assert.equal(blocks[0].type, 'text');
+  }
+});
+
+test('definitions are accepted by the real defineTool when it is installed', async (t) => {
+  let defineTool;
+  try {
+    ({ defineTool } = await import('@deepseek-ai/dsh-tools'));
+  } catch {
+    t.skip('@deepseek-ai/dsh-tools not installed in this environment');
+    return;
+  }
+  const real = buildToolDefs({ defineTool });
+  assert.equal(real.length, 3);
+  for (const tool of real) assert.equal(typeof tool.execute, 'function');
+});
+
 test('every tool declares parameters and a description', () => {
   for (const { definition } of defs()) {
     assert.ok(definition.description.length > 40, `${definition.name} needs a real description`);

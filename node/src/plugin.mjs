@@ -15,6 +15,13 @@ export const name = 'dsh-office';
 /** Host service this plugin consumes. */
 export const inject = ['tools'];
 
+
+/** Canonical output is the CLI's JSON payload; rendering is a plain text block. */
+const textOutput = (description) => ({
+  schema: { type: 'json', description },
+  render: (_args, value) => [{ type: 'text', text: JSON.stringify(value) }],
+});
+
 const EXTRACT_DESCRIPTION = [
   'Read a .docx template and return its fact table: paragraphs with resolved',
   'font size / fonts, tables with cell ids, and auto-detected fillable slots',
@@ -51,6 +58,7 @@ export function buildToolDefs({ defineTool, options = {} } = {}) {
         document: { type: 'string', required: true, description: 'Path to the .docx template.' },
         output: { type: 'string', description: 'Optional path to write the facts JSON.' },
       },
+      output: textOutput('Summary of the extracted fact table.'),
       execute: async ({ document, output }) => {
         const args = { document: absolutePath(document, defaults.cwd), python: defaults.python, cwd: defaults.cwd };
         const facts = extractFacts(args);
@@ -80,6 +88,7 @@ export function buildToolDefs({ defineTool, options = {} } = {}) {
         output: { type: 'string', required: true, description: 'Path of the .docx to write.' },
         force: { type: 'boolean', description: 'Ignore the template fingerprint guard.' },
       },
+      output: textOutput('Render result: output path, content fingerprint, applied ops.'),
       execute: async ({ template, ops, output, force }) => fillDocument({
         template: absolutePath(template, defaults.cwd),
         ops: absolutePath(ops, defaults.cwd),
@@ -100,6 +109,7 @@ export function buildToolDefs({ defineTool, options = {} } = {}) {
           description: 'When true, a hard finding rejects the tool call instead of returning a report.',
         },
       },
+      output: textOutput('Verification report: ok, hard[], soft[], captions, images.'),
       execute: async ({ document, ops, failOnHard }) => {
         const report = verifyDocument({
           document: absolutePath(document, defaults.cwd),
@@ -117,15 +127,41 @@ export function buildToolDefs({ defineTool, options = {} } = {}) {
 /**
  * Cordis entry point. Mounting registers the tools in the current scope.
  */
-export async function apply(ctx, config = {}) {
-  let defineTool;
+/**
+
+ * Resolve `defineTool` from the profile, not from this file.
+ *
+ * A profile that installs the plugin with `link:` (a local path) keeps the real
+ * files outside the profile tree, so a bare `import('@deepseek-ai/dsh-tools')`
+ * from here fails even though the host has the package. Try the normal import
+ * first (npm/tarball installs), then fall back to resolving from the working
+ * directory, which for a DSH profile is inside the profile.
+ */
+async function loadDefineTool() {
+  const attempts = [];
   try {
-    ({ defineTool } = await import('@deepseek-ai/dsh-tools'));
+    return (await import('@deepseek-ai/dsh-tools')).defineTool;
   } catch (error) {
-    throw new Error(
-      'dsh-office needs @deepseek-ai/dsh-tools in the profile that loads it '
-      + `(peer dependency): ${error.message}`,
-    );
+    attempts.push(`import: ${error.message}`);
   }
+  try {
+    const { createRequire } = await import('node:module');
+    const { pathToFileURL } = await import('node:url');
+    const { join } = await import('node:path');
+    const requireFromCwd = createRequire(join(process.cwd(), 'noop.js'));
+    const resolved = requireFromCwd.resolve('@deepseek-ai/dsh-tools');
+    return (await import(pathToFileURL(resolved).href)).defineTool;
+  } catch (error) {
+    attempts.push(`from cwd: ${error.message}`);
+  }
+  throw new Error(
+    'dsh-office needs @deepseek-ai/dsh-tools in the profile that loads it (peer dependency). '
+    + `Tried ${attempts.join(' | ')}. Install the plugin from a tarball or npm so the peer resolves, `
+    + 'or run the profile from a directory that can resolve it.',
+  );
+}
+
+export async function apply(ctx, config = {}) {
+  const defineTool = await loadDefineTool();
   for (const def of buildToolDefs({ defineTool, options: config })) ctx.tools.register(def);
 }

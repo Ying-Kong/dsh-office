@@ -15,7 +15,8 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=20.11"
+    "node": ">=20.11",
+    "dsh": ">=0.2.0-0"
   },
   "keywords": [
     "dsh",
@@ -32,7 +33,7 @@
     "test:coverage": "node --test --experimental-test-coverage test/core.test.mjs test/plugin.test.mjs"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-tools": "*"
+    "@deepseek-ai/dsh-tools": ">=0.2.0-0"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/dsh-tools": {

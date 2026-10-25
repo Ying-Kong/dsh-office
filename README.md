@@ -115,18 +115,49 @@ Exit codes are part of the contract:
 
 ### DSH plugin
 
+Not on npm yet, so there are two install paths.
+
+**A. Tarball (peer resolves cleanly)** — recommended
+
 ```bash
-dsh plugin --profile web add @dsh-office/plugin   # or link the local folder
+cd node && npm pack                     # -> dsh-office-plugin-0.1.0.tgz
+dsh plugin --profile web add ./dsh-office-plugin-0.1.0.tgz
 ```
 
-The adapter registers three model-facing tools — `office_extract`,
-`office_fill`, `office_verify` — and nothing else. It resolves the Python core
-through, in order:
+**B. Local link (fastest while developing)**
 
-1. `config.pythonPath`
-2. `$DSH_OFFICE_PYTHON`
-3. `<repo>/.venv/bin/python` (or `Scripts/python.exe` on Windows)
-4. `python3`
+```bash
+dsh plugin --profile web add /absolute/path/to/dsh-office/node
+```
+
+Then open **Plugins** and enable `dsh-office`. With a linked install the real
+files stay outside the profile, so the adapter resolves
+`@deepseek-ai/dsh-tools` from the profile working directory as a fallback.
+
+**Point it at a Python that can import the core**
+
+```bash
+export DSH_OFFICE_PYTHON=/absolute/path/to/dsh-office/.venv/bin/python
+# or: pip install -e python/   into the interpreter DSH already uses
+```
+
+Resolution order: `config.pythonPath` → `$DSH_OFFICE_PYTHON` →
+`<repo>/.venv/bin/python` → `python3`. If the profile reports
+`ModuleNotFoundError: office_core`, the fourth fallback was used.
+
+Config keys: `pythonPath`, `cwd` (defaults to the session working directory).
+
+**Version compatibility**
+
+| | |
+|---|---|
+| Tested against | DSH `0.2.1-rc.2`, Node `24.16.0` |
+| Declares | `engines.dsh >=0.2.0-0`, peer `@deepseek-ai/dsh-tools >=0.2.0-0` |
+| Registers | three tools named `office_*`; no services, no global state |
+| Conflict surface | none found: the config tree mounts the row without warnings, and `defineTool` from the running host accepts all three definitions |
+
+Fallbacks used: `python3` with `office_core` on `PYTHONPATH`, or the plugin's
+own `.venv` when installed from a checkout.
 
 ---
 
