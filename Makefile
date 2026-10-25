@@ -22,7 +22,7 @@ test-py:
 	cd python && ../$(PYTHON) -m pytest
 
 test-node:
-	cd node && node --test "test/*.test.mjs"
+	cd node && node --test test/core.test.mjs test/plugin.test.mjs
 
 demo:
 	mkdir -p .scratch

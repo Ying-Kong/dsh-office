@@ -48,7 +48,7 @@ jobs:
           pip install -e "python/[dev]"
       - name: test
         working-directory: node
-        run: node --test "test/*.test.mjs"
+        run: node --test test/core.test.mjs test/plugin.test.mjs
 
   render:
     name: render reference fixture

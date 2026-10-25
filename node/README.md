@@ -19,5 +19,5 @@ Configuration (all optional):
 Tests run without DSH installed (`defineTool` is injected):
 
 ```bash
-node --test "test/*.test.mjs"
+node --test test/core.test.mjs test/plugin.test.mjs
 ```

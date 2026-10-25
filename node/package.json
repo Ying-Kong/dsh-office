@@ -9,21 +9,35 @@
     "./core": "./src/core.mjs",
     "./package.json": "./package.json"
   },
-  "files": ["src", "README.md", "LICENSE"],
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
   "engines": {
     "node": ">=20.11"
   },
-  "keywords": ["dsh", "deepseek-harness", "plugin", "docx", "ooxml", "template", "agent"],
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "plugin",
+    "docx",
+    "ooxml",
+    "template",
+    "agent"
+  ],
   "license": "MIT",
   "scripts": {
-    "test": "node --test \"test/*.test.mjs\"",
-    "test:coverage": "node --test --experimental-test-coverage \"test/*.test.mjs\""
+    "test": "node --test test/core.test.mjs test/plugin.test.mjs",
+    "test:coverage": "node --test --experimental-test-coverage test/core.test.mjs test/plugin.test.mjs"
   },
   "peerDependencies": {
     "@deepseek-ai/dsh-tools": "*"
   },
   "peerDependenciesMeta": {
-    "@deepseek-ai/dsh-tools": { "optional": true }
+    "@deepseek-ai/dsh-tools": {
+      "optional": true
+    }
   },
   "dsh": {
     "bundle": {
