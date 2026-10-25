@@ -1,5 +1,10 @@
 # dsh-office
 
+[![ci](https://github.com/Ying-Kong/dsh-office/actions/workflows/ci.yml/badge.svg)](https://github.com/Ying-Kong/dsh-office/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](python/pyproject.toml)
+[![node 20.11+](https://img.shields.io/badge/node-20.11%2B-brightgreen.svg)](node/package.json)
+
 **Bring your own template. Fill it once. Prove it landed.**
 
 A DSH plugin (Node) plus a deterministic Python core for filling office documents

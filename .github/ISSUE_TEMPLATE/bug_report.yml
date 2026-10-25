@@ -1,0 +1,50 @@
+name: Bug report
+description: A render, a locator or a verification result is wrong.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: run the two commands below and paste their output. Most
+        "it wrote into the wrong cell" reports are template drift (the ops were
+        authored for an older build) and show up as exit code 4.
+        ```bash
+        dsh-office extract template.docx -o facts.json
+        dsh-office verify rendered.docx ops.json
+        ```
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Expected vs actual, in one or two sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: facts
+    attributes:
+      label: facts.json (trimmed is fine)
+      render: json
+  - type: textarea
+    id: ops
+    attributes:
+      label: ops.json
+      render: json
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      placeholder: "dsh-office 0.1.0, python 3.12, Word 16.x / LibreOffice 25.2, Windows 11"
+    validations:
+      required: true
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Where did you open the result?
+      options:
+        - Microsoft Word (Windows)
+        - Microsoft Word (macOS)
+        - WPS Office
+        - LibreOffice
+        - Only inspected via python-docx

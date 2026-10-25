@@ -1,0 +1,36 @@
+name: Feature or adapter request
+description: A new op, locator, format (Excel) or integration.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        `spec/README.md` describes how to add an op or a locator: schema first,
+        verifier assertion second, tests third. An op nobody can verify will not
+        be merged.
+  - type: textarea
+    id: use-case
+    attributes:
+      label: The document and the repetition
+      description: What form, how often, and what breaks today.
+    validations:
+      required: true
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Which layer
+      options:
+        - new op
+        - new locator
+        - slot detection heuristic
+        - format adapter (xlsx, ...)
+        - DSH plugin / panel
+        - docs
+    validations:
+      required: true
+  - type: textarea
+    id: sketch
+    attributes:
+      label: Sketch
+      description: An ops fragment, a locator example, or the desired facts shape.
+      render: json

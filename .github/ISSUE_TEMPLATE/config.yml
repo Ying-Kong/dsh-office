@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Known limitations first
+    url: https://github.com/Ying-Kong/dsh-office/blob/main/docs/limitations.md
+    about: Pagination, theme fonts, zip timestamps and .doc rejection are documented, not bugs.
