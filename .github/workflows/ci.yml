@@ -1,0 +1,74 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    name: python ${{ matrix.python }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e "python/[dev]"
+      - name: test
+        working-directory: python
+        run: python -m pytest --cov=office_core --cov-report=term-missing
+
+  node:
+    name: node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["20", "22", "24"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: install python core (the adapter shells out to it)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e "python/[dev]"
+      - name: test
+        working-directory: node
+        run: node --test "test/*.test.mjs"
+
+  render:
+    name: render reference fixture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e "python/[dev]"
+      - name: render + verify
+        run: |
+          dsh-office fill fixtures/templates/report.docx fixtures/reporter/ops.json -o rendered.docx
+          dsh-office verify rendered.docx fixtures/reporter/ops.json | tee verify.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rendered-report
+          path: |
+            rendered.docx
+            verify.json

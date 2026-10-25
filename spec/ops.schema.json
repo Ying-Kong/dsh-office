@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dsh-office.dev/spec/ops.schema.json",
+  "title": "dsh-office ops list v1",
+  "description": "Declarative mutation list. The orchestrating model authors this file; only the interpreter may touch the document.",
+  "type": "object",
+  "required": ["schema", "ops"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "dsh-office/ops@1" },
+    "template": {
+      "type": "object",
+      "description": "Optional fingerprint guard. `fill` refuses to run on a different template build.",
+      "properties": { "content_sha256": { "type": "string", "minLength": 16 } },
+      "additionalProperties": true
+    },
+    "figure_start": { "type": "integer", "minimum": 1, "default": 1 },
+    "ops": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/op" }
+    }
+  },
+  "$defs": {
+    "target": {
+      "description": "How to find the node to touch. `cell-label` finds the cell to the right of the label.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["by", "id"],
+          "properties": { "by": { "const": "cell-id" }, "id": { "type": "string", "pattern": "^t\\d+r\\d+c\\d+$" } },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["by", "label"],
+          "properties": { "by": { "const": "cell-label" }, "label": { "type": "string", "minLength": 1 } },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["by", "id"],
+          "properties": { "by": { "const": "paragraph-id" }, "id": { "type": "string", "pattern": "^p\\d+$" } },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["by", "text"],
+          "properties": {
+            "by": { "const": "paragraph-text" },
+            "text": { "type": "string", "minLength": 1 },
+            "nth": { "type": "integer", "minimum": 0, "default": 0 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "formatSpec": {
+      "type": "object",
+      "properties": {
+        "sz_pt": { "type": "number", "exclusiveMinimum": 0 },
+        "font_east_asia": { "type": "string" },
+        "font_ascii": { "type": "string" },
+        "bold": { "type": "boolean" },
+        "align": { "enum": ["left", "center", "right", "justify"] }
+      },
+      "additionalProperties": false
+    },
+    "item": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "text"],
+          "properties": {
+            "kind": { "const": "paragraph" },
+            "text": { "type": "string" },
+            "sz_pt": { "type": "number" },
+            "font_east_asia": { "type": "string" },
+            "font_ascii": { "type": "string" },
+            "bold": { "type": "boolean" },
+            "align": { "enum": ["left", "center", "right", "justify"] },
+            "space_before_pt": { "type": "number" },
+            "space_after_pt": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "text"],
+          "properties": {
+            "kind": { "const": "heading" },
+            "text": { "type": "string" },
+            "sz_pt": { "type": "number" },
+            "font_east_asia": { "type": "string" },
+            "font_ascii": { "type": "string" },
+            "bold": { "type": "boolean" },
+            "align": { "enum": ["left", "center", "right", "justify"] },
+            "space_before_pt": { "type": "number" },
+            "space_after_pt": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "image"],
+          "properties": {
+            "kind": { "const": "figure" },
+            "image": { "type": "string", "minLength": 1 },
+            "caption": { "type": "string", "description": "Use {n} for the running figure number." },
+            "width_cm_max": { "type": "number", "exclusiveMinimum": 0 },
+            "height_cm_max": { "type": "number", "exclusiveMinimum": 0 },
+            "keep_with_next": { "type": "boolean" },
+            "space_before_pt": { "type": "number" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "op": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["op", "target", "value"],
+          "properties": {
+            "op": { "const": "set_text" },
+            "target": { "$ref": "#/$defs/target" },
+            "value": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["op", "target", "find", "replace"],
+          "properties": {
+            "op": { "const": "replace_in_paragraph" },
+            "target": { "$ref": "#/$defs/target" },
+            "find": { "type": "string", "minLength": 1 },
+            "replace": { "type": "string" },
+            "all": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["op", "into", "items"],
+          "properties": {
+            "op": { "const": "append_content" },
+            "into": { "$ref": "#/$defs/target" },
+            "items": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/item" } }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["op", "target", "format"],
+          "properties": {
+            "op": { "const": "set_format" },
+            "target": { "$ref": "#/$defs/target" },
+            "format": { "$ref": "#/$defs/formatSpec" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

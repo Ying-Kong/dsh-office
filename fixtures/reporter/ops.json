@@ -1,0 +1,67 @@
+{
+  "schema": "dsh-office/ops@1",
+  "template": {
+    "content_sha256": "cdef819251e45f1628fe1d4edd4c79e2902cfd4888965c912b09de8165a8881a",
+    "note": "课程实验实训报告模板（fixtures/templates/report.docx），由 `dsh-office extract` 生成"
+  },
+  "figure_start": 1,
+  "ops": [
+    {
+      "op": "set_text",
+      "target": { "by": "cell-label", "label": "实验实训名称" },
+      "value": "Scala 的下载安装以及 IDEA 开发工具中下载安装 Scala 插件"
+    },
+    {
+      "op": "set_text",
+      "target": { "by": "cell-label", "label": "指导老师" },
+      "value": "李老师"
+    },
+    {
+      "op": "replace_in_paragraph",
+      "target": { "by": "paragraph-id", "id": "p2" },
+      "find": "2025年  月  日",
+      "replace": "2026 年 10 月 24 日"
+    },
+    {
+      "op": "append_content",
+      "into": { "by": "cell-id", "id": "t0r5c0" },
+      "items": [
+        { "kind": "heading", "text": "一、实验环境与准备" },
+        {
+          "kind": "paragraph",
+          "text": "本实验在 Windows 侧安装 JDK 1.8、IDEA 与 Scala 2.12.15，Linux 侧在 ~/.bashrc 中配置 JAVA_HOME、HADOOP_HOME、SCALA_HOME 等环境变量，两端 Scala 版本保持 2.12.15 一致，便于与 Spark 3.3.0 匹配。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "1. 从 Scala 官网下载 scala-2.12.15.zip，解压到 E:\\scala-2.12.15，目录下包含 bin、lib、doc 等子目录（图 1）。"
+        },
+        {
+          "kind": "figure",
+          "image": "../images/fig1.png",
+          "caption": "图 {n}  Scala 2.12.15 解压目录",
+          "width_cm_max": 14.2
+        },
+        {
+          "kind": "paragraph",
+          "text": "2. 新建系统变量 SCALA_HOME=E:\\scala-2.12.15，并在 Path 中追加 %SCALA_HOME%\\bin，打开命令行执行 scala，出现 “Welcome to Scala 2.12.15” 即安装成功（图 2）。"
+        },
+        {
+          "kind": "figure",
+          "image": "../images/fig3.png",
+          "caption": "图 {n}  cmd 中输入 scala 进入交互环境",
+          "width_cm_max": 14.2
+        }
+      ]
+    },
+    {
+      "op": "append_content",
+      "into": { "by": "cell-id", "id": "t0r6c0" },
+      "items": [
+        {
+          "kind": "paragraph",
+          "text": "完成 Scala 2.12.15 的下载解压、SCALA_HOME 与 Path 配置，IDEA 中 Scala 插件安装及 HelloScala 运行正常，Windows 与 Linux 两端版本一致。安装时需注意 Scala 版本与 JDK 匹配。"
+        }
+      ]
+    }
+  ]
+}
